@@ -16,10 +16,9 @@ async function loadQuestions() {
 function showQuestion() {
   clearInterval(timer);
   if (currentIndex >= questions.length) {
-    // ตรวจว่ามีข้อที่ข้ามไว้หรือไม่
     const remaining = skippedIndexes.filter(i => !answeredIndexes.includes(i));
     if (remaining.length > 0) {
-      currentIndex = remaining[0]; // กลับไปทำข้อที่ข้าม
+      currentIndex = remaining[0];
       skippedIndexes = remaining.slice(1);
       showQuestion();
       return;
@@ -43,14 +42,15 @@ function showQuestion() {
     });
     resultHTML += "</ul>";
     document.getElementById("result-box").innerHTML += resultHTML;
+
+    // ✅ แสดงปุ่มเริ่มใหม่
+    document.getElementById("restart-btn").style.display = "inline-block";
     return;
   }
 
   const q = questions[currentIndex];
 
-  // ✅ แสดงเลขข้อ
   document.getElementById("question-number").innerText = `ข้อที่ ${currentIndex + 1} จาก ${questions.length}`;
-
   document.getElementById("question").innerText = q.question;
   const choicesBox = document.getElementById("choices");
   choicesBox.innerHTML = "";
@@ -72,7 +72,6 @@ function checkAnswer(selectedIndex) {
   const isCorrect = selectedIndex === q.answerIndex;
   if (isCorrect) score++;
 
-  // ✅ เก็บผลลัพธ์แต่ละข้อ
   results[currentIndex] = {
     question: q.question,
     selected: q.choices[selectedIndex],
@@ -115,6 +114,22 @@ document.getElementById("back-btn").onclick = () => {
 document.getElementById("next-btn").onclick = () => {
   skippedIndexes.push(currentIndex);
   currentIndex++;
+  showQuestion();
+};
+
+// ✅ ปุ่มเริ่มใหม่
+document.getElementById("restart-btn").onclick = () => {
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  skippedIndexes = [];
+  answeredIndexes = [];
+
+  document.getElementById("question-box").style.display = "block";
+  document.getElementById("controls").style.display = "block";
+  document.getElementById("result-box").innerHTML = '<p id="score"></p>';
+  document.getElementById("restart-btn").style.display = "none";
+
   showQuestion();
 };
 
