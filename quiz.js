@@ -15,6 +15,7 @@ async function loadQuestions() {
 
 function showQuestion() {
   clearInterval(timer);
+
   if (currentIndex >= questions.length) {
     const remaining = skippedIndexes.filter(i => !answeredIndexes.includes(i));
     if (remaining.length > 0) {
@@ -29,6 +30,15 @@ function showQuestion() {
     document.getElementById("controls").style.display = "none";
     document.getElementById("score").innerText = `คุณทำได้ ${score}/${questions.length} คะแนน`;
 
+    // ล้างเฉลยเก่า (ถ้ามี)
+    let explanations = document.getElementById("explanations");
+    if (!explanations) {
+      explanations = document.createElement("div");
+      explanations.id = "explanations";
+      document.getElementById("result-box").appendChild(explanations);
+    }
+
+    // เติมเฉลยใหม่
     let resultHTML = "<h2>เฉลยและคำอธิบาย</h2><ul>";
     results.forEach((r, i) => {
       resultHTML += `<li>
@@ -41,7 +51,7 @@ function showQuestion() {
       </li><br>`;
     });
     resultHTML += "</ul>";
-    document.getElementById("result-box").innerHTML += resultHTML;
+    explanations.innerHTML = resultHTML;
 
     // ✅ แสดงปุ่มเริ่มใหม่
     document.getElementById("restart-btn").style.display = "inline-block";
@@ -117,23 +127,22 @@ document.getElementById("next-btn").onclick = () => {
   showQuestion();
 };
 
+// ✅ ปุ่มเริ่มใหม่ → กลับไปหน้าเลือกชุดข้อสอบ
 document.getElementById("restart-btn").onclick = () => {
+  // รีเซ็ต state
   currentIndex = 0;
   score = 0;
   results = [];
   skippedIndexes = [];
   answeredIndexes = [];
-  document.getElementById("question-box").style.display = "block";
-  document.getElementById("controls").style.display = "block";
 
-  // ❌ อย่าใช้ innerHTML เพราะมันลบปุ่ม restart-btn ทิ้ง
-  // ✅ ใช้รีเซ็ตเฉพาะข้อความคะแนนและลบเฉลยเก่า
+  // ล้าง UI เฉลย
   document.getElementById("score").innerText = "";
-  const oldList = document.querySelector("#result-box ul");
-  if (oldList) oldList.remove();
-
+  document.getElementById("explanations")?.remove();
   document.getElementById("restart-btn").style.display = "none";
 
-  showQuestion();
+  // ✅ กลับไปหน้าเลือกชุดข้อสอบ
+  window.location.href = "select.html";
 };
+
 loadQuestions();
