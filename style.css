@@ -1,0 +1,33 @@
+body {
+  font-family: "Tahoma", sans-serif;
+  background: #f4f4f4;
+  text-align: center;
+}
+
+#quiz-container {
+  width: 600px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+#choices {
+  list-style: none;
+  padding: 0;
+}
+
+#choices li {
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 20px;
+}
