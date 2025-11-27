@@ -126,3 +126,50 @@ h1 {
   background: #f8f9fa;
   border-radius: 6px;
 }
+/* หน้าเลือกชุดข้อสอบ */
+#quiz-select {
+  width: 600px;
+  margin: 80px auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+#quiz-select h1 {
+  color: #0056b3;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+#quiz-select p {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.set-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.set-buttons button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 15px 25px;
+  font-size: 18px;
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 80%;
+}
+
+.set-buttons button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
