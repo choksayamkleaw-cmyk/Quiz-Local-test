@@ -3,7 +3,9 @@ let currentIndex = 0;
 let score = 0;
 let timer;
 const timeLimit = 80; // 80 วินาทีต่อข้อ
-let results = []; // ✅ เก็บผลลัพธ์แต่ละข้อ
+let results = []; // เก็บผลลัพธ์แต่ละข้อ
+let skippedIndexes = []; // เก็บข้อที่ข้าม
+let answeredIndexes = []; // เก็บข้อที่ตอบแล้ว
 
 async function loadQuestions() {
   const res = await fetch("questions_set1.json");
@@ -14,11 +16,20 @@ async function loadQuestions() {
 function showQuestion() {
   clearInterval(timer);
   if (currentIndex >= questions.length) {
+    // ตรวจว่ามีข้อที่ข้ามไว้หรือไม่
+    const remaining = skippedIndexes.filter(i => !answeredIndexes.includes(i));
+    if (remaining.length > 0) {
+      currentIndex = remaining[0]; // กลับไปทำข้อที่ข้าม
+      skippedIndexes = remaining.slice(1);
+      showQuestion();
+      return;
+    }
+
+    // ✅ แสดงผลลัพธ์และเฉลย
     document.getElementById("question-box").style.display = "none";
     document.getElementById("controls").style.display = "none";
     document.getElementById("score").innerText = `คุณทำได้ ${score}/${questions.length} คะแนน`;
 
-    // ✅ แสดงเฉลยและคำอธิบาย
     let resultHTML = "<h2>เฉลยและคำอธิบาย</h2><ul>";
     results.forEach((r, i) => {
       resultHTML += `<li>
@@ -62,14 +73,15 @@ function checkAnswer(selectedIndex) {
   if (isCorrect) score++;
 
   // ✅ เก็บผลลัพธ์แต่ละข้อ
-  results.push({
+  results[currentIndex] = {
     question: q.question,
     selected: q.choices[selectedIndex],
     correct: q.choices[q.answerIndex],
     explanation: q.explanation,
     isCorrect: isCorrect
-  });
+  };
 
+  answeredIndexes.push(currentIndex);
   currentIndex++;
   showQuestion();
 }
@@ -84,13 +96,24 @@ function startTimer() {
 
     if (timeLeft <= 0) {
       clearInterval(timer);
+      skippedIndexes.push(currentIndex);
       currentIndex++;
       showQuestion();
     }
   }, 1000);
 }
 
+// ✅ ปุ่มย้อนกลับ
+document.getElementById("back-btn").onclick = () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion();
+  }
+};
+
+// ✅ ปุ่มข้าม
 document.getElementById("next-btn").onclick = () => {
+  skippedIndexes.push(currentIndex);
   currentIndex++;
   showQuestion();
 };
