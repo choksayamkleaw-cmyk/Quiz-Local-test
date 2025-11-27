@@ -117,20 +117,23 @@ document.getElementById("next-btn").onclick = () => {
   showQuestion();
 };
 
-// ✅ ปุ่มเริ่มใหม่
 document.getElementById("restart-btn").onclick = () => {
   currentIndex = 0;
   score = 0;
   results = [];
   skippedIndexes = [];
   answeredIndexes = [];
-
   document.getElementById("question-box").style.display = "block";
   document.getElementById("controls").style.display = "block";
-  document.getElementById("result-box").innerHTML = '<p id="score"></p>';
+
+  // ❌ อย่าใช้ innerHTML เพราะมันลบปุ่ม restart-btn ทิ้ง
+  // ✅ ใช้รีเซ็ตเฉพาะข้อความคะแนนและลบเฉลยเก่า
+  document.getElementById("score").innerText = "";
+  const oldList = document.querySelector("#result-box ul");
+  if (oldList) oldList.remove();
+
   document.getElementById("restart-btn").style.display = "none";
 
   showQuestion();
 };
-
 loadQuestions();
